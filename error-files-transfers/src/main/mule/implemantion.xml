@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns:cifs="http://www.mulesoft.org/schema/mule/cifs" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns:ipswitch-mit-mule4="http://www.mulesoft.org/schema/mule/ipswitch-mit-mule4" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/ipswitch-mit-mule4 http://www.mulesoft.org/schema/mule/ipswitch-mit-mule4/current/mule-ipswitch-mit-mule4.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/cifs http://www.mulesoft.org/schema/mule/cifs/current/mule-cifs.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<flow name="moveErrorFiles" doc:id="e81c2105-fd91-4438-893f-077e9a1b50cc" >
+		<sftp:list doc:name="ListAllfiles" doc:id="8eee1198-813c-4dbf-8d47-bbe490c2336b" config-ref="SFTP_Source" directoryPath="#[p('sftp-source.directory') ++ 'ERROR']" recursive="true"/>
+		<foreach doc:name="For Each" doc:id="6d44fd11-ef4f-439d-b78e-d3fa0ec9f075" collection="#[payload]">
+			<choice doc:name="Choice" doc:id="a9c83ab8-af44-4d9a-9560-3a30f3a2a7d6" >
+				<when expression='#[attributes.path contains ".txt"]'>
+					<sftp:move doc:name="Move" doc:id="bd3b8245-26a2-4ef1-8489-5b8e574d6c16" config-ref="SFTP_Source" sourcePath="#[attributes.path]" targetPath="#[p('sftp-source.directory')]" createParentDirectories="false" overwrite="true"/>
+					<logger level="INFO" doc:name="Logger" doc:id="b7ff6643-6dd2-4ae4-b51a-9d4036e9ed65" message="#[attributes.path]" />
+				</when>
+				<otherwise >
+					<logger level="INFO" doc:name="Logger" doc:id="0d32c027-f639-49dd-9198-d8a76fa1ca39" message="Folder #[attributes.path] contains no files" />
+				</otherwise>
+			</choice>
+		</foreach>
+		<ee:transform doc:name="Transform Message" doc:id="2e3b30e0-b6d9-4d17-b4cc-5ae76ae01a8b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter($.attributes.path contains ".txt")  map ((item, index) -> {
+	
+	"fileName" : item.attributes.path
+	
+	
+})]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="getAllFiles" doc:id="b21b23ae-96d0-4944-bafc-e2f6582d9712" >
+		<sftp:list doc:name="ListAllfiles" doc:id="ddcc0982-6037-4b79-b3ca-122866be6796" config-ref="SFTP_Source" directoryPath="#[p('sftp-source.directory') ++ 'ERROR']" recursive="true" />
+		<ee:transform doc:name="returnOnlyErrorFiles" doc:id="d40356cc-708f-4737-9a8f-b54ab6fa12f1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload filter($.attributes.path contains ".txt")  map ((item, index) -> {
+	
+	"fileName" : item.attributes.path
+	
+	
+})]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="implemantionFlow" doc:id="a5fbf926-6e64-4ac0-ab3c-a7043820b7c1" >
+		<http:listener doc:name="Listener" doc:id="24a65e26-4e04-4b9a-9faa-1d17e3fc5f73" config-ref="HTTP_Listener_ErrorFiles" path="/*" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Logger" doc:id="be5f3276-01ab-4089-9650-dc3576ffd412" message="${mule.home}/apps/${app.name}/" />
+		<http:load-static-resource doc:name="Load static resource" doc:id="fd895ce7-d268-4448-97cb-e64767e609a0" resourceBasePath="${mule.home}/apps/${app.name}/web"/>
+	</flow>
+	<flow name="AjaxGetProcessor">
+        <http:listener config-ref="HTTP_Listener_ErrorFiles" path="/ajaxprocessor/" allowedMethods="GET" doc:name="HTTP"/>
+        <flow-ref doc:name="Flow Reference" doc:id="01b8a5e2-6cbc-4dd0-8525-3a7da0fff193" name="getAllFiles"/>
+    </flow>
+</mule>

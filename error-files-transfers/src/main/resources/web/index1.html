@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<style>
+	
+body {font-family: "Lato", sans-serif;
+	  background-color: #fff;
+	  font-size: 14px;
+}
+
+h1 {
+	font-size: 1.8em;
+	font-weight: 400;
+	font-style: bolder;
+	color: #b6002d;
+	font-family: 'ubuntu', sans-serif;
+	float:left;
+ 	margin-bottom: 0px;
+}
+
+#container {
+	width: 550px;
+	margin: 15px 15px;
+	padding: 10px;			
+}
+
+.divider {
+    margin: 0;
+    padding: 0;
+    border-top: 1px dashed #ccc;
+    background-color: #f1f1f1;
+    width: 1150px;
+}
+
+/*
+* Table Styles 
+*/
+
+.tablestyle {
+    /*border: 1px solid black;*/
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    padding: 5px;
+    vertical-align: top;
+}
+
+.tablestyle_highlight {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    padding: 5px;
+    background-color: #f1f1f1;
+    vertical-align: top;
+}
+
+.tablestyle_header {	
+	margin: 0px;
+    padding: 5px;
+    vertical-align: top;    
+}
+
+.tablestyle_header_highlight {
+    padding: 5px; 
+       border: 1px solid #ccc;
+    border-collapse: collapse;    
+    background-color: #f1f1f1;
+    vertical-align: top;
+    text-align: left;
+}
+	</style>
+	<script>
+	/*
+	 * AJAX CALL
+	 */
+	 
+		function test() {				
+			var ajaxRequest; 
+
+			try {
+				// Opera 8.0+, Firefox, Safari
+				ajaxRequest = new XMLHttpRequest();
+			} catch (e) {
+				// Internet Explorer Browsers
+				try {
+					ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+				} catch (e) {
+					try {
+						ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+					} catch (e) {
+						// Something went wrong
+						alert("Your browser broke!");
+						return false;
+					}
+				}
+			}
+
+			ajaxRequest.open("POST", ("/api/allfiles"), true);
+			ajaxRequest.setRequestHeader("Content-type", "application/json");
+			ajaxRequest.send();
+			location.reload();
+			}
+
+	function ajaxGet() {				
+	var ajaxRequest; 
+
+	try {
+		// Opera 8.0+, Firefox, Safari
+		ajaxRequest = new XMLHttpRequest();
+	} catch (e) {
+		// Internet Explorer Browsers
+		try {
+			ajaxRequest = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch (e) {
+			try {
+				ajaxRequest = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e) {
+				// Something went wrong
+				alert("Your browser broke!");
+				return false;
+			}
+		}
+	}
+	ajaxRequest.onreadystatechange = function() {
+		if (ajaxRequest.readyState == 4) {
+			if (ajaxRequest.status == 200) {
+				var response = ajaxRequest.responseText;
+					
+				try {
+					transformed = JSON.parse(response);
+				
+					var html = "";								
+					
+						
+						html += "<table class=\"tablestyle\" style=\"width: 500px;\">";
+						
+						html += "<tr>";
+						html += "<th class=\"tablestyle_highlight\" style=\"width: 250px;\">File Name</th>";
+						
+						html += "</tr>";
+						for ( var i = 0; i < transformed.length; i++) {
+						html += "<tr>";		
+						
+						html += "<td class=\"tablestyle\">" + transformed[i].fileName + "</td>";			
+						
+					
+						html += "</tr>"; // end table row
+						}
+						html +=  "</table>" +
+						"<br /><br />"; 
+						if(transformed.length!=0)
+						{
+							html +=  "<table><tr><td colspan=\"3\"><button onclick=\"test();\" name=\"btntstSubmit\" title=\"subimt FIles\">Submit Files</button></td></tr></table>";	
+						}
+									
+					 // end for
+					
+					document.getElementById("tableView").innerHTML = html;																			
+					document.getElementById("tableView").style.display = "block";									
+				}
+				catch(e) {						
+					if (response) {							
+						document.getElementById("tableView").innerHTML = response;
+					}
+					else{							
+						document.getElementById("tableView").innerHTML = "There are no error files";
+					}
+				}
+			}
+		}
+	}
+
+	ajaxRequest.open("GET", ("/api/allfiles"), true);
+	ajaxRequest.setRequestHeader("Content-type", "application/json");
+	ajaxRequest.send();
+	}</script> 
+	<title>Mule as a webserver test</title>
+</head>
+<body> 
+	<div id="container">	
+		<h1>Resumit error files</h1>
+		<br /><br />
+		<div id="tableView"></div>		
+		<table>				
+			<tr>
+				<td colspan="3"><button onclick="ajaxGet();" name="btnSubmit" title="get firms">Get Files</button></td>
+			</tr>					
+		</table>	
+	</div> <!-- container -->	
+</body>
+</html>

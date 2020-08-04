@@ -1,0 +1,35 @@
+#%RAML 1.0
+title: Error Files Transfer
+description: Manually trigger all error files and move to IN folder
+mediaType:
+  - application/json
+version: "1.0"
+protocols:
+  - HTTP
+/allfiles:
+  get:
+    displayName: List All Files
+    responses:
+      "200":
+        body:
+          properties:
+            fileName??:
+              type: FileName
+    securedBy: []
+  post:
+    displayName: Move All Files
+
+    responses:
+      "200":
+        body:
+          properties:
+            message?:
+              example: "file /data/PREP/IN/ERROR/2020/3/26/WayFairOrders_V2.txt successfully transferred "
+              type: string
+    securedBy: []
+types:
+  FileName:
+    properties:
+      fileName?:
+        example: /data/PREP/IN/ERROR/2020/3/26/WayFairOrders_V2.txt
+        type: string

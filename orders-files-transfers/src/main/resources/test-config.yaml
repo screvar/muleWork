@@ -1,0 +1,12 @@
+sftp-source:
+  directory: "/data/PREP/IN/"
+  host: "185.112.228.25"
+  port: "22"
+  user: "wayfair"
+  password: "lcV2WZYm"
+ftp-target:
+  directory: "/prep-mec-v10/EDI/DGB/WAYFAIR/IN/"
+  host: "smb://multst-prep-mec-v10.dorel.eu"
+  port: "445"
+  user: "EU-SVC0275"
+  password: "s@4Nafebpb"

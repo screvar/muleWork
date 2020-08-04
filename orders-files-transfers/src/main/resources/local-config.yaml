@@ -1,0 +1,12 @@
+sftp-source:
+  directory: "/data/PREP/IN/"
+  host: "localhost"
+  port: "22"
+  user: "josif"
+  password: "josif"
+ftp-target:
+  directory: "/myproject/"
+  host: "smb://192.168.178.2"
+  port: "445"
+  user: "josif-cifs"
+  password: "josif"

@@ -1,0 +1,34 @@
+{
+  "server": [
+    {
+      "id": "3",
+      "transferType": "ftp2ftp",
+      "workingDir": "/empdir",
+      "workingDirList": "/empIN",
+      "hostS": "localhost",
+      "portS": "21",
+      "userS": "ftpuser",
+      "passwordS": "kaktus13",
+      "hostT": "localhost",
+      "portT": "21",
+      "userT": "ftpuser",
+      "passwordT": "kaktus13",
+      "workingDirT": "/empOUT"
+    },
+    {
+      "id": "5",
+      "transferType": "fs2ftp",
+      "workingDir": "",
+      "workingDirList": "C:\\Users\\Devoteam\\Desktop\\Dorel\\end1",
+      "hostS": "localhost",
+      "portS": "21",
+      "userS": "ftpuser",
+      "passwordS": "kaktus13",
+      "hostT": "localhost",
+      "portT": "21",
+      "userT": "ftpuser",
+      "passwordT": "kaktus13",
+      "workingDirT": "/empIN"
+    }
+  ]
+}

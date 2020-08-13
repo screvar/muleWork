@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<ftp:config name="FTP_ConfigA" doc:name="FTP Config" doc:id="b4a54223-8f09-43fb-9dfb-7cc0a7ee042a" >
+		<ftp:connection host="#[payload.hostS]" port="#[payload.portS]" username="#[payload.userS]" password="#[payload.passwordS]" workingDir="#[payload.workingDir]"/>
+	</ftp:config>
+	<ftp:config name="FTP_ConfigB" doc:name="FTP Config" doc:id="5a548138-70ab-4de9-9a8a-1a691c526d79" >
+		<ftp:connection workingDir="#[vars.payloadLast.workingDirT]" host="#[vars.payloadLast.hostT]" port="#[vars.payloadLast.portT]" username="#[vars.payloadLast.userT]" password="#[vars.payloadLast.passwordT]" />
+	</ftp:config>
+	<ftp:config name="FTP_ConfigC" doc:name="FTP Config" doc:id="0696beed-5e51-4707-b070-08319379b6f7" >
+		<ftp:connection workingDir="#[vars.payloadLast.workingDirList]" host="#[vars.payloadLast.hostS]" port="#[vars.payloadLast.portS]" username="#[vars.payloadLast.userS]" password="#[vars.payloadLast.passwordS]"/>
+	</ftp:config>
+	<file:config name="File_Config_server" doc:name="File Config" doc:id="7130d2e0-8ec3-45dd-b964-bccb36be136c" >
+		<file:connection workingDir="${app.home}" />
+	</file:config>
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="a5e5ae5d-9245-4705-a532-942a607e26a9" >
+		<email:smtp-connection host="smtp.gmail.com" port="587" user="crevarsrecko90@gmail.com" password="kaktusickaktus13kolaforD">
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<global-property doc:name="Global Property" doc:id="3b312616-0f13-4f33-b6e8-9bb0c2b7ad4c" name="mule-env" value="local"/>
+	<configuration-properties doc:name="Configuration properties" doc:id="68c85e5a-2b6a-4adf-aa9a-7d6ca12c86e8" file="mule-env-${mule.env}.yaml" />
+</mule>

@@ -1,0 +1,6 @@
+scheduler:
+  frequency: "5"
+  startDelay: "0"
+
+readConfFile:
+  filePath: "C:\Users\Devoteam\Desktop\Dorel\conf\servers.csv"

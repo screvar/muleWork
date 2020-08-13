@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 	<flow name="order-transfer" doc:id="2ce5be7a-0b2f-44c7-8332-ddada302850c" >
 		<sftp:listener doc:name="DMZServer" doc:id="ad1b0958-1096-4bbc-acfd-8e13a626726c" config-ref="SFTP_Source" autoDelete="true" moveToDirectory="#[p('sftp-source.directory') ++ 'ARCHIVE/' ++ now().year as String ++ '/' ++ now().month as String ++ '/' ++ now().day as String]" applyPostActionWhenFailed="false" recursive="false">
 			<scheduling-strategy >
-				<fixed-frequency />
+				<fixed-frequency timeUnit="DAYS"/>
 			</scheduling-strategy>
 			<sftp:matcher filenamePattern="*.txt" />
 		</sftp:listener>

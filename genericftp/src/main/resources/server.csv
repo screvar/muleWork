@@ -1,5 +1,0 @@
-id,transferType,workingDir,workingDirList,hostS,portS,userS,passwordS,hostT,portT,userT,passwordT,workingDirT
-3,ftp2ftp,/empdir,/empIN,localhost,21,ftpuser,kaktus13,localhost,21,ftpuser,kaktus13,/empOUT
-5,fs2ftp,,C:\Users\Devoteam\Desktop\Dorel\end1,localhost,21,ftpuser,kaktus13,localhost,21,ftpuser,kaktus13,/empIN
-6,ftp2fs,/empdir,/ftp2fs,localhost,21,ftpuser,kaktus13,,,,,C:\Users\Devoteam\Desktop\Dorel\emp1
-1,a,,,,,,,,,,,

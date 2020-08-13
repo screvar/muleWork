@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:java="http://www.mulesoft.org/schema/mule/java"
-	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
-	xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd
 http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
@@ -11,14 +11,15 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
 http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
-http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd">
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="51e14778-60e5-4c1e-8adb-cda829897143" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<file:config name="File_Config" doc:name="File Config" doc:id="89626a48-1183-4b3b-852b-db5a23ca8eef" >
 		<file:connection workingDir="#[app.home]" />
 	</file:config>
-	<flow name="read-server-conf-file" doc:id="32c6c8ff-fc71-4585-8021-bfe2910f0fce" >
+	 <!--  <flow name="read-server-conf-file" doc:id="32c6c8ff-fc71-4585-8021-bfe2910f0fce" >
 		<http:listener doc:name="Listener" doc:id="fc5024a1-cc90-4d13-b44e-7586ecd0bb57" config-ref="HTTP_Listener_config" allowedMethods="GET" path="/read">
 			<ee:repeatable-file-store-stream inMemorySize="1024" />
 		</http:listener>
@@ -32,7 +33,7 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
+-&#45;&#45;
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -43,13 +44,13 @@ payload]]></ee:set-payload>
 		<http:listener doc:name="Listener" doc:id="2049f545-9a6a-4422-9c77-10a72b356b8c" config-ref="HTTP_Listener_config" path="/readFile" allowedMethods="GET">
 			<ee:repeatable-file-store-stream inMemorySize="1024" />
 		</http:listener>
-		<file:read doc:name="Read" doc:id="7fc46e33-6fba-47b0-a73d-5819e6c51ece" path="C:\Users\Devoteam\Desktop\Dorel\conf\servers.csv" lock="true"/>
+		<file:read doc:name="Read" doc:id="7fc46e33-6fba-47b0-a73d-5819e6c51ece" path="${app.name}/" lock="true"/>
 		<logger level="INFO" doc:name="Logger" doc:id="fc40c1c5-4d9b-48dd-9021-948c2988835c" />
 		<ee:transform doc:name="Transform Message" doc:id="c584e9b1-8e5e-45ec-83e8-30b4b489b61f" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
----
+-&#45;&#45;
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -57,7 +58,7 @@ payload]]></ee:set-payload>
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
+-&#45;&#45;
 server: payload map  {
 	id:$.id,
 	transferType:$.transferType,
@@ -87,7 +88,7 @@ server: payload map  {
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/csv headerLineNumber = 0 , header = false
----
+-&#45;&#45;
 payload.server map ( server , indexOfServer ) -> {
 	id: server.id,
 	transferType: server.transferType,
@@ -113,28 +114,21 @@ payload.server map ( server , indexOfServer ) -> {
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
----
+-&#45;&#45;
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<ee:transform doc:name="Transform Message" doc:id="0842425c-b36d-4465-80a8-961a792072ea" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-{
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="e96cea26-76ee-417c-85b2-e248cc0f6ea9" message="#[payload]"/>
-	</flow>
+	</flow> -->
 	<flow name="generic-ftp-event-driven-flow" doc:id="3a00bbc9-94b2-4fe1-9599-5054ad0e5ac9" >
 		<scheduler doc:name="Scheduler" doc:id="fc3d3a75-a0b8-4d3d-97c4-5cff2a91da33" >
 			<scheduling-strategy >
-				<fixed-frequency frequency="5" timeUnit="MINUTES"/>
+				<fixed-frequency frequency="${scheduler.frequency}" timeUnit="MINUTES" startDelay="${scheduler.startDelay}"/>
 			</scheduling-strategy>
 		</scheduler>
-		<file:read doc:name="Read From Conf File" doc:id="55e79f98-ebce-471c-a5d6-dd3ea9847c0e" path="C:\Users\Devoteam\Desktop\Dorel\conf\servers.csv" lock="true"/>
+		<file:read doc:name="Read From Conf File" doc:id="55e79f98-ebce-471c-a5d6-dd3ea9847c0e" path="${readConfFile.filePath}" lock="true">
+			<ee:repeatable-file-store-stream inMemorySize="1024" />
+		</file:read>
 		<ee:transform doc:name="CSV to JSON" doc:id="a0dbaac3-268c-4136-be18-558c337afbf6" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -143,52 +137,134 @@ output application/json
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="c69ef95c-11ff-4475-8f99-93d39c3b898b" message="#[payload]"/>
 		<foreach doc:name="For Each Row In File" doc:id="c464ae22-80b6-4626-bd75-01dab6610be7" >
 			<validation:is-true doc:name="Is Transfer Type Valid" doc:id="1706717b-9f6e-434d-9484-9c3606c78afc" expression="#[['ftp2ftp','ftp2fs','fs2ftp','ftp2ftpM'] contains payload.transferType]" message="#['Invalid Transfer Type ']" />
 			<choice doc:name="Choice - File Transfer Type" doc:id="08a79ebb-c079-49ae-ad87-0d124459fd68">
 			<when expression='#[payload.transferType == "ftp2fs"]'>
 					<set-variable value="#[payload]" doc:name="Payload From File" doc:id="02678d4f-2bc1-4518-88d2-242fc4283d00" variableName="payloadLast"/>
-					<flow-ref doc:name="ftp2fs" doc:id="ee91b0cd-6f4f-49ab-bc58-b87aeb7de178" name="generic-ftp2fs-Sub_Flow"/>
+					<flow-ref doc:name="ftp2fs" doc:id="ee91b0cd-6f4f-49ab-bc58-b87aeb7de178" name="generic-ftp2fs"/>
 				</when>
 			<when expression='#[payload.transferType == "fs2ftp"]'>
 					<set-variable value="#[payload]" doc:name="Payload From File" doc:id="97f6bde3-57fd-4738-9763-7732aa396157" variableName="payloadLast"/>
-					<flow-ref doc:name="fs2ftp" doc:id="0d24eea0-a60c-4e2f-ab96-e8966909d279" name="generic-fs2ftp-Sub_Flow"/>
+					<flow-ref doc:name="fs2ftp" doc:id="0d24eea0-a60c-4e2f-ab96-e8966909d279" name="generic-fs2ftp"/>
 				</when>
 				<when expression='#[payload.transferType == "ftp2ftp"]' >
 					<set-variable value="#[payload]" doc:name="Payload From File" doc:id="89d2cb20-c383-4026-8445-1e360edc3993" variableName="payloadLast" />
-					<flow-ref doc:name="ftp2ftp" doc:id="4c1d1b84-06b0-4e9d-b6a9-023aa64a648c" name="generic-ftp2ftp(onSameServer)-Sub_Flow"/>
+					<flow-ref doc:name="ftp2ftp" doc:id="4c1d1b84-06b0-4e9d-b6a9-023aa64a648c" name="generic-ftp2ftp"/>
 				</when>
+				<otherwise >
+					<logger level="INFO" doc:name="Logger" doc:id="c363ad39-9e21-46ea-aeec-e8beee76891d" message="#['It is in default branch.']"/>
+				</otherwise>
 		</choice>
 		</foreach>
 	</flow>
-	<sub-flow name="generic-ftp2fs-Sub_Flow" doc:id="778f1668-7b44-4dde-ad44-3d562d3ef22b" >
-		<logger level="INFO" doc:name="Logger" doc:id="f870c0d2-1c76-4e12-a3da-6936aa0fc6f6" message="ftp2fs"/>
+	<flow name="generic-ftp2fs" doc:id="2c9610e7-242e-424e-90cd-adf9e589c4e0" >
 		<ftp:list doc:name="List All files On Location" doc:id="58b450e5-74a0-4471-bf9c-e8831dfe4754" config-ref="FTP_ConfigA" directoryPath="#[payload.workingDirList]">
-			<ftp:matcher filenamePattern="*.txt"/>
+			<ftp:matcher filenamePattern="*.txt" />
 		</ftp:list>
-		<foreach doc:name="For Each File" doc:id="a6af64ca-c57b-471a-814a-6cadf0c2b5ec" >
-			<file:write doc:name="Write All Files to Location" doc:id="1978a6ae-81af-4b62-92b8-641a1b127824" path="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]"/>
-			<ftp:delete doc:name="Delete Files From FTP" doc:id="794e2c62-f28f-4ac2-8233-008b336a129f" config-ref="FTP_ConfigC" path="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]"/>
+		<foreach doc:name="For Each File" doc:id="a6af64ca-c57b-471a-814a-6cadf0c2b5ec">
+			<file:write doc:name="Write All Files to Location" doc:id="1978a6ae-81af-4b62-92b8-641a1b127824" path="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" />
+			<ftp:delete doc:name="Delete Files From FTP" doc:id="794e2c62-f28f-4ac2-8233-008b336a129f" config-ref="FTP_ConfigC" path="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" />
 		</foreach>
-		<logger level="INFO" doc:name="Logger" doc:id="b842b598-a499-4bed-aca4-ac6631eaead9" message="FTP2FS File Move Successfully Done."/>
-	</sub-flow>
-	<sub-flow name="generic-fs2ftp-Sub_Flow" doc:id="ad259bef-fbbc-4664-a5d8-5baf1164120b" >
-		<logger level="INFO" doc:name="Logger" doc:id="57517073-2645-46a5-ad3c-c78b00837b66" message="fs2ftp"/>
-		<file:list doc:name="List All Files On Location" doc:id="b455b861-0640-49ec-9d18-d3be1754c459" directoryPath="#[vars.payloadLast.workingDirList]"/>
-		<foreach doc:name="For Each File" doc:id="62025689-6c95-498b-bba9-2d89570d23a0" >
-			<ftp:write doc:name="Write All Files To Location" doc:id="bb052e64-7036-4cbb-93f9-27e39375ea54" config-ref="FTP_ConfigB" path="#[attributes.name]"/>
-			<file:delete doc:name="Delete Files From FS" doc:id="facb53b8-45f0-448a-8d8e-a717430afdef" path="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="b842b598-a499-4bed-aca4-ac6631eaead9" message="FTP2FS File Move Successfully Done." />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="2c826755-c9c5-4ae2-9923-7ed2c037809e" type="ANY">
+				<!--  <ftp:move doc:name="Move" doc:id="70af30c5-c8b8-41e2-8fad-2ce212f063a3" config-ref="FTP_ConfigC" sourcePath="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" targetPath="#[vars.payloadLast.workingDirList as String ++ '/' ++ 'ERROR/']" overwrite="true"/> -->
+				<ee:transform doc:name="Transform Message" doc:id="223da822-aee0-4a90-a296-537151b58a89" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'ErrorDescription': error.detailedDescription,
+	'ErrorType': error.errorType,
+	'Location': vars.payloadLast.workingDirT,
+	'FileName': message.attributes.fileName,
+	'TransferType': vars.payloadLast.transferType
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<email:send doc:name="Send Email" doc:id="8db710af-03fc-4711-9a7b-e98e7cfdc162" config-ref="Email_SMTP" fromAddress="genericFileTransfer@gmail.com" subject="File Transger Error - Mule">
+					<email:to-addresses>
+						<email:to-address value="crevarsrecko90@gmail.com" />
+					</email:to-addresses>
+					<email:body contentType="text/plain" encoding="UTF-8">
+					</email:body>
+				</email:send>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="generic-fs2ftp" doc:id="2baaaf0d-a8ac-49ab-81d1-ce5300a3a710" >
+		<file:list doc:name="List All Files On Location" doc:id="b455b861-0640-49ec-9d18-d3be1754c459" directoryPath="#[vars.payloadLast.workingDirList]" >
+			<file:matcher directories="EXCLUDE" />
+		</file:list>
+			<foreach doc:name="For Each File" doc:id="62025689-6c95-498b-bba9-2d89570d23a0">
+			<file:copy doc:name="Archive File" doc:id="49621478-f6fe-4f6c-bd18-54eafab518f3" sourcePath="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" targetPath="#[vars.payloadLast.workingDirList as String ++ '/' ++ 'ARCHIVE/' ++ now().year as String ++ '/' ++ now().month as String ++ '/' ++ now().day as String]" overwrite="true" />
+			<ftp:write doc:name="Write All Files To Location" doc:id="bb052e64-7036-4cbb-93f9-27e39375ea54" config-ref="FTP_ConfigB" path="#[attributes.name]" />
+			<file:delete doc:name="Delete Files From FS" doc:id="facb53b8-45f0-448a-8d8e-a717430afdef" path="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" />
 		</foreach>
-		<logger level="INFO" doc:name="Logger" doc:id="e72091cb-8228-4549-9c76-b96ee2024710" message="#[payload]"/>
-	</sub-flow>
-	<sub-flow name="generic-ftp2ftp(onSameServer)-Sub_Flow" doc:id="cbf10b53-6127-4e0f-9a2e-26c8130f3007">
-		<logger level="INFO" doc:name="Logger" doc:id="2cd42645-1264-46f5-b193-985d6279e2b9" />
+		<logger level="INFO" doc:name="Logger" doc:id="e72091cb-8228-4549-9c76-b96ee2024710" message="FS2FTP File Move Successfully Done." />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="0794a285-50f6-4a37-b647-03a52f1690ff" type="ANY">
+				<!--     <file:move doc:name="Move" doc:id="f4101fde-1a83-44ca-93a7-ee7189f868cd" sourcePath="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" targetPath="#[vars.payloadLast.workingDirList as String ++ '/' ++ 'ERROR/']" overwrite="true"/> -->
+				<ee:transform doc:name="Transform Message" doc:id="7cddbb74-f0ca-4d78-8371-2005aaa5aa3a" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'ErrorDescription': error.detailedDescription,
+	'ErrorType': error.errorType,
+	'Location': vars.payloadLast.workingDirT,
+	'FileName': message.attributes.fileName,
+	'TransferType': vars.payloadLast.transferType
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<email:send doc:name="Send Email" doc:id="3481bec5-86ab-4c06-9e5c-427d8ec2e160" config-ref="Email_SMTP" fromAddress="genericFileTransfer@gmail.com" subject="File Transger Error - Mule">
+					<email:to-addresses>
+						<email:to-address value="crevarsrecko90@gmail.com" />
+					</email:to-addresses>
+					<email:body contentType="text/plain" encoding="UTF-8">
+					</email:body>
+				</email:send>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="generic-ftp2ftp" doc:id="37f7ed55-a14a-41c9-8710-e22edd1da076" >
 		<ftp:list doc:name="List All Files On Location" doc:id="eac94763-79b2-4915-84a4-49a27e33e3e1" config-ref="FTP_ConfigA" directoryPath="#[payload.workingDirList]">
+			<ftp:matcher directories="EXCLUDE" />
 		</ftp:list>
 		<foreach doc:name="For Each File" doc:id="cbfbacf0-27f6-431b-b85f-e4916e970839">
-			<ftp:move doc:name="Move FTP2FTP" doc:id="222ac4bf-aaaf-4600-96b5-a7906611a9d8" config-ref="FTP_ConfigC" sourcePath="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" targetPath="#[vars.payloadLast.workingDirT]" overwrite="true" />
+			<ftp:copy doc:name="Archive File" doc:id="c3d484e8-da64-4091-92de-0de313db6d4d" config-ref="FTP_ConfigC" sourcePath="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" targetPath="#[vars.payloadLast.workingDirList as String ++ '/' ++ 'ARCHIVE/' ++ now().year as String ++ '/' ++ now().month as String ++ '/' ++ now().day as String]" overwrite="true"/>
+			<ftp:move doc:name="Move FTP2FTP" doc:id="222ac4bf-aaaf-4600-96b5-a7906611a9d8" config-ref="FTP_ConfigC" sourcePath="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" targetPath="#[vars.payloadLast.workingDirT]" overwrite="true" createParentDirectories="false"/>
 			</foreach>
 		<logger level="INFO" doc:name="Logger" doc:id="0eb05d96-65f7-424b-9f18-e2deca37216c" message="FTP2FTP File Move Successfully Done." />
-	</sub-flow>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="4aab2fe3-14d3-4fcd-b89f-46b7831fdd04" type="ANY">
+				<!--   <ftp:move doc:name="Move" doc:id="fc5e95fe-af3f-4532-9021-458a62a8d414" config-ref="FTP_ConfigC" sourcePath="#[vars.payloadLast.workingDirList as String ++ '/' ++ attributes.fileName]" targetPath="#[vars.payloadLast.workingDirList as String ++ '/' ++ 'ERROR/']" overwrite="true"/> -->
+				<ee:transform doc:name="Transform Message" doc:id="fa16db50-5ba9-4168-aa0a-bcacb53d552b" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'ErrorDescription': error.detailedDescription,
+	'ErrorType': error.errorType,
+	'Location': vars.payloadLast.workingDirT,
+	'FileName': message.attributes.fileName,
+	'TransferType': vars.payloadLast.transferType
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<email:send doc:name="Send Email" doc:id="cd854ccb-eeba-404a-b4f8-312ab3220e32" config-ref="Email_SMTP" fromAddress="genericFileTransfer@gmail.com" subject="File Transger Error - Mule">
+					<email:to-addresses>
+						<email:to-address value="crevarsrecko90@gmail.com" />
+					</email:to-addresses>
+					<email:body contentType="text/plain" encoding="UTF-8">
+					</email:body>
+				</email:send>
+			</on-error-continue>
+		</error-handler>
+	</flow>
 </mule>
